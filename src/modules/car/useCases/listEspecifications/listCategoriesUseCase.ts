@@ -1,19 +1,22 @@
-import { Especification } from "../../entities/Especification";
-import { EspecificationsRepository } from "../../repositories/EspecificationsRepository";
+import { inject, injectable } from "tsyringe";
+import { Especification } from "../../infra/typeorm/entities/Especification";
+import { EspecificationsRepository } from "../../infra/typeorm/repositories/EspecificationsRepository";
 
 
+@injectable()
 export class ListEspecificationsUseCase {
 
 
-  constructor(private especificationRepository: EspecificationsRepository) {
+  constructor(
+    @inject("EspecificationsRepository")
+    private especificationRepository: EspecificationsRepository
+  ) { }
 
-  }
-
-  execute(): Especification[] {
+  async execute(): Promise<Especification[]> {
 
 
 
-    return this.especificationRepository.teste_return()
+    return await this.especificationRepository.teste_return()
   }
 
 

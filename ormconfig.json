@@ -4,14 +4,14 @@
   "port": 5432,
   "username": "docker",
   "password": "ignite",
-  "database": "rentx",
-  "synchronize": true,
+  "database": "rentex",
+  
   "logging": true,
-  "migrations":["./src/database/migrations/*.ts"],
+  "migrations":["./src/shared/infra/typeorm/migrations/*.ts"],
   "entities": ["./src/modules/**/entities/*.ts"],
 
   "cli":{
-    "migrationsDir": "./src/database/migrations"
+    "migrationsDir": "./src/shared/infra/typeorm/migrations"
   }
 
  

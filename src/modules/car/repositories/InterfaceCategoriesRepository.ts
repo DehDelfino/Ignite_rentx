@@ -1,11 +1,9 @@
-import { Category } from "../entities/Category"
+import { ICreateCategoryDTO } from "../dtos/ICreateCategoryDTO"
+import { Category } from "../infra/typeorm/entities/Category"
 
 
 
-interface ICreateCategoryDTO {
-  name: string,
-  description: string
-}
+
 
 interface InterfaceCategoriesRepository {
 

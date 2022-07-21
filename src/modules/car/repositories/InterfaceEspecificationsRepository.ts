@@ -9,11 +9,11 @@ interface ICreateEspecificationDTO {
 interface InterfaceEspecificationsRepository {
 
 
-  create({ name, description }: ICreateEspecificationDTO): void
+  create({ name, description }: ICreateEspecificationDTO): Promise<void>
 
-  teste_return(): Especification[]
+  teste_return(): Promise<Especification[]>
 
-  AlredyExist(name: string): Especification
+  AlredyExist(name: string): Promise<Especification>
 
 }
 

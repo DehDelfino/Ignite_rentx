@@ -1,34 +1,29 @@
-import { Request,Response } from "express"
+import { Request, Response } from "express"
+import { container } from "tsyringe"
 import { CreateCateogoryUseCase } from "./CreateCateogoryUseCase"
 
-class CreateCategoryController{
-
-  private createCategoryUseCase: CreateCateogoryUseCase
-
-  constructor(createCategoryUseCase: CreateCateogoryUseCase){
-    this.createCategoryUseCase = createCategoryUseCase
-  }
+class CreateCategoryController {
 
 
 
-  createCategory(request:Request, response:Response):Response{
+  createCategory(request: Request, response: Response): Response {
 
-    const {name, description} = request.body
-    
-    try {
+    const { name, description } = request.body
 
-      const category = this.createCategoryUseCase.execute({name,description})
-    
-      return response.status(201).json({category})
-      
-    } catch (error) {
-      return response.status(400).json({error:error.message})
-    }
-  
-    
+
+
+    const createCategoryUseCase = container.resolve(CreateCateogoryUseCase)
+
+    const category = createCategoryUseCase.execute({ name, description })
+
+    return response.status(201).json({ category })
+
+
+
+
   }
 
 }
 
 
-export {CreateCategoryController}
+export { CreateCategoryController }

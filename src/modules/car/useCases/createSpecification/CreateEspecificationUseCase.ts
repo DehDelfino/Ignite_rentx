@@ -1,36 +1,40 @@
+import { inject, injectable } from "tsyringe"
+import { AppError } from "../../../../shared/errors/AppError"
 import { InterfaceEspecificationsRepository } from "../../repositories/InterfaceEspecificationsRepository"
 
 
 
 
-interface IRequest{
-  name:string,
-  description:string
+interface IRequest {
+  name: string,
+  description: string
 }
 
-class CreateEspecificationUseCase{
+@injectable()
+class CreateEspecificationUseCase {
 
 
-  private especificationsRepository: InterfaceEspecificationsRepository
-
-  constructor(especificationsRepository:InterfaceEspecificationsRepository){
-    this.especificationsRepository = especificationsRepository
-  }
 
 
-  execute({name, description}:IRequest){
+  constructor(
+    @inject("EspecificationsRepository")
+    private especificationsRepository: InterfaceEspecificationsRepository
+  ) { }
 
 
-    const especificationAlredyExist = this.especificationsRepository.AlredyExist(name) // to verify if especification alredy existe, finding by name
+  async execute({ name, description }: IRequest): Promise<void> {
 
-    if(especificationAlredyExist){
-  
-      throw new Error("Especification alredy exist")
-      
-    
+
+    const especificationAlredyExist = await this.especificationsRepository.AlredyExist(name) // to verify if especification alredy existe, finding by name
+
+    if (especificationAlredyExist) {
+
+      throw new AppError("Especification alredy exist")
+
+
     }
-  
-    this.especificationsRepository.create({name, description}) // to create a especification
+
+    this.especificationsRepository.create({ name, description }) // to create a especification
 
 
 
@@ -42,4 +46,4 @@ class CreateEspecificationUseCase{
 }
 
 
-export {CreateEspecificationUseCase}
+export { CreateEspecificationUseCase }

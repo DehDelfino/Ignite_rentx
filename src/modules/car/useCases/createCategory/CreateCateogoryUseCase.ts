@@ -1,39 +1,41 @@
+import { inject, injectable } from 'tsyringe'
+import { AppError } from '../../../../shared/errors/AppError'
 import { InterfaceCategoriesRepository } from "../../repositories/InterfaceCategoriesRepository"
-import { InterfaceEspecificationsRepository } from "../../repositories/InterfaceEspecificationsRepository"
 
 
 
 
-interface IRequest{
-  name:string,
-  description:string
+interface IRequest {
+  name: string,
+  description: string
 }
 
-class CreateCateogoryUseCase{
+@injectable()
+class CreateCateogoryUseCase {
 
 
-  private categoriesRepository: InterfaceCategoriesRepository
 
-  constructor(CategoriesRepository:InterfaceCategoriesRepository){
-    this.categoriesRepository = CategoriesRepository
-  }
-
-
-  execute({name, description}:IRequest){
+  constructor(
+    @inject("CategoriesRepository")
+    private categoriesRepository: InterfaceCategoriesRepository
+  ) { }
 
 
-    const gategoryAlredyExist = this.categoriesRepository.AlredyExist(name) // to verify if category alredy existe, finding by name
+  async execute({ name, description }: IRequest) {
 
-    if(gategoryAlredyExist){
-  
-      throw new Error("Category alredy exist")
-      
-    
+
+    const gategoryAlredyExist = await this.categoriesRepository.AlredyExist(name) // to verify if category alredy existe, finding by name
+
+    if (gategoryAlredyExist) {
+
+      throw new AppError("Category alredy exist")
+
+
     }
-  
-    const category = this.categoriesRepository.create({name, description}) // to create a category
 
-    return category
+    this.categoriesRepository.create({ name, description }) // to create a category
+
+
 
 
 
@@ -43,4 +45,4 @@ class CreateCateogoryUseCase{
 }
 
 
-export {CreateCateogoryUseCase}
+export { CreateCateogoryUseCase }

@@ -1,31 +1,27 @@
-import {Request, Response} from 'express'
+import { Request, Response } from 'express'
+import { container } from 'tsyringe'
 import { CreateEspecificationUseCase } from './CreateEspecificationUseCase'
 
-export class CreateEspecificationController{
+
+export class CreateEspecificationController {
 
 
-  constructor(private createEspecificationUseCase: CreateEspecificationUseCase ){
+  async createEspecification(request: Request, response: Response): Promise<Response> {
 
-  }
+    const { name, description } = request.body
 
 
+    const createEspecificationUseCase = container.resolve(CreateEspecificationUseCase)
+    await createEspecificationUseCase.execute({ name, description })
 
-  createEspecification(request:Request, response:Response):Response{
-    
-    const {name, description} = request.body
-    try {
-      
-
-      this.createEspecificationUseCase.execute({name,description})
-
-      return response.status(201).send("ok")
+    return response.status(201).send("ok")
 
 
 
-    } catch (error) {
-      
-      return response.status(400).json({error: error.messa})
-    }
+
+
+
+
 
   }
 }

@@ -1,7 +1,8 @@
 import fs from 'fs'
 // import {parse} from 'csv-parse'
 import { parse } from "csv-parse"
-import { CategoriesRepository } from "../../repositories/CategoriesRepository";
+import { inject, injectable } from 'tsyringe';
+import { CategoriesRepository } from '../../infra/typeorm/repositories/CategoriesRepository';
 
 
 interface IImportCategory {
@@ -9,9 +10,12 @@ interface IImportCategory {
   description: string
 }
 
+@injectable()
 export class ImportCategoryUseCase {
 
-  constructor(private categoriesRespository: CategoriesRepository) {
+  constructor(
+    @inject("CategoriesRepository")
+    private categoriesRespository: CategoriesRepository) {
 
   }
 
@@ -55,11 +59,19 @@ export class ImportCategoryUseCase {
     const categories = await this.loadFile(file)
 
 
+
     categories.map(async (category) => {
 
       const { name, description } = category
 
-      this.categoriesRespository.create({ name, description })
+      const existCategory = await this.categoriesRespository.AlredyExist(name)
+
+
+      if (!existCategory) {
+
+        this.categoriesRespository.create({ name, description })
+      }
+
     })
 
 
